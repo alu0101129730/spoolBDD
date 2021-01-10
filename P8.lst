@@ -1,0 +1,269 @@
+SQL> REM 8
+SQL> ALTER TABLE TITULACION
+  2  2 MODIFY T CHAR(6);
+2 MODIFY T CHAR(6)
+*
+ERROR at line 2:
+ORA-01735: invalid ALTER TABLE option 
+
+
+SQL> ALTER TABLE TITULACION
+  2  MODIFY T CHAR(6);
+ALTER TABLE TITULACION
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (ALU0101129730.FK_ASIGNATURA_TITULACION) 
+violated - child record found 
+
+
+SQL> ALTER TABLE ASIGNATURA
+  2  DISABLE CONSTRAINT FK_ASIGNATURA_TITULACION;
+
+Table altered.
+
+SQL> ALTER TABLE TITULACION
+  2  MODIFY T CHAR(6);
+
+Table altered.
+
+SQL> ALTER TABLE ASIGNATURA
+  2  ENABLE CONSTRAINT FK_ASIGNATURA_TITULACION;
+
+Table altered.
+
+SQL> exit
+SQL> CONNECT ALUMNO/xxxxx
+ERROR:
+ORA-12162: TNS:net service name is incorrectly specified 
+
+
+Warning: You are no longer connected to ORACLE.
+SQL> CONNECT ALUMNO/xxxxx
+ERROR:
+ORA-12162: TNS:net service name is incorrectly specified 
+
+
+SQL> REM 31
+SQL> SELECT * FROM DEPARTAMENTO;
+SP2-0640: Not connected
+SQL> SELECT * FROM ALU4774.DEPARTAMENTO;
+SP2-0640: Not connected
+SQL> CONNECT ALUMNO/xxxxxx
+ERROR:
+ORA-12162: TNS:net service name is incorrectly specified 
+
+
+SQL> CONNECT ALUMNO/xxxxx;
+ERROR:
+ORA-12162: TNS:net service name is incorrectly specified 
+
+
+SQL> CONNECT alumno/xxxxx;
+ERROR:
+ORA-12162: TNS:net service name is incorrectly specified 
+
+
+SQL> CONNECT alumno@ORCLPDB1
+Connected.
+SQL> REM 31
+SQL> SELECT * FROM DEPARTAMENTO;
+
+        CD D                                                                                                                                                                        
+---------- --------------------                                                                                                                                                     
+         1 ANALISIS MATEMATICO                                                                                                                                                      
+         5 ECONOMIA APLICADA                                                                                                                                                        
+
+SQL> SELECT * FROM PROFESOR;
+SELECT * FROM PROFESOR
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> SELECT * FROM alu4774.DEPARTAMENTO;
+SELECT * FROM alu4774.DEPARTAMENTO
+                      *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> SELECT * FROM ALU4774.DEPARTAMENTO;
+SELECT * FROM ALU4774.DEPARTAMENTO
+                      *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> REM 33
+SQL> INSERT INTO DEPARTAMENTO
+  2  VALUES (5,'ECONOMIA');
+INSERT INTO DEPARTAMENTO
+*
+ERROR at line 1:
+ORA-00001: unique constraint (ALUMNO.SYS_C0025052) violated 
+
+
+SQL> REM 34
+SQL> UPDATE DEPARTAMENTO
+  2  SET D='ECONOMIA APLICADA' WHERE CD = 5;
+
+1 row updated.
+
+SQL> 35
+SP2-0226: Invalid line number 
+SQL> SELECT * FROM alu0101129730.DEPARTAMENTO
+  2  ;
+
+        CD D                                                                                                                                                                        
+---------- ------------------------------------------------------------                                                                                                             
+         1 ANALISIS MATEMATICO                                                                                                                                                      
+         2 ASTROFISICA                                                                                                                                                              
+         3 ESTADISTICA, INVESTIGACION OPERATIVA Y COMPUTACION                                                                                                                       
+         4 MATEMATICA FUNDAMENTAL                                                                                                                                                   
+
+SQL> REM 32
+SQL> SELECT * FROM alu0101129730.PROFESOR
+  2  ;
+SELECT * FROM alu0101129730.PROFESOR
+                            *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> REM 33
+SQL> INSERT INTO alu0101129730.DEPARTAMENTO
+  2  VALUES(5,'ECONOMIA');
+
+1 row created.
+
+SQL> REM 34
+SQL> UPDATE alu0101129730.DEAPRTAMENTO
+  2  SET D='ECONOMIA APLICADA'
+  3  WHERE CD=5;
+UPDATE alu0101129730.DEAPRTAMENTO
+                     *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> UPDATE alu0101129730.DEAPRTAMENTO
+  2  UPDATE alu0101129730.DEAPRTAMENTO
+  3  ;
+UPDATE alu0101129730.DEAPRTAMENTO
+*
+ERROR at line 2:
+ORA-00971: missing SET keyword 
+
+
+SQL> UPDATE alu0101129730.DEPARTAMENTO
+  2  SET D='ECONOMIA APLICADA'
+  3  WHERE CD=5;
+
+1 row updated.
+
+SQL> REM 35
+SQL> UPDATE alu0101129730.TITULACION
+  2  SET FAC='ETSII'
+  3  WHERE T='GII';
+
+1 row updated.
+
+SQL> REM 36
+SQL> DELETE FROM alu0101129730.TITULACION
+  2  WHERE T='GII';
+DELETE FROM alu0101129730.TITULACION
+                          *
+ERROR at line 1:
+ORA-01031: insufficient privileges 
+
+
+SQL> REM No tenemos ese permiso
+SQL> REM 37
+SQL> ROLLBACK;
+
+Rollback complete.
+
+SQL> REM 38
+SQL> CREATE VIEW VISTA3
+  2  AS SELECT A,CAR
+  3  FROM alu0101129730.ASIGNATURA;
+
+View created.
+
+SQL> REM 39
+SQL> SELECT * FROM VISTA3;
+
+A                                                         CAR                                                                                                                       
+-------------------------------------------------- ----------                                                                                                                       
+ESTADISTICA                                                 6                                                                                                                       
+BASES DE DATOS                                              7                                                                                                                       
+INTELIGENCIA ARTIFICIAL                                     4                                                                                                                       
+ALMACENES DE DATOS                                          7                                                                                                                       
+MINERIA DE DATOS                                            7                                                                                                                       
+INFORMATICA BASICA                                          7                                                                                                                       
+ALGEBRA                                                     1                                                                                                                       
+CALCULO                                                     8                                                                                                                       
+OPTIMIZACION                                                6                                                                                                                       
+GESTION DE RIESGOS                                          4                                                                                                                       
+ASTRONOMIA                                                  3                                                                                                                       
+
+A                                                         CAR                                                                                                                       
+-------------------------------------------------- ----------                                                                                                                       
+ENSENANZA DE LA MATEMATICA                                  5                                                                                                                       
+ANALISIS COMPLEJO                                           2                                                                                                                       
+
+13 rows selected.
+
+SQL> REM 40
+SQL> DROP VIEW VISTA 3;
+DROP VIEW VISTA 3
+                *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> DROP VIEW VISTA3;
+
+View dropped.
+
+SQL> SPOOL
+currently spooling to P8.lst
+SQL> REM 41
+SQL> DELETE alu0101129730.ASIGNATURA;
+DELETE alu0101129730.ASIGNATURA
+                     *
+ERROR at line 1:
+ORA-01031: insufficient privileges 
+
+
+SQL> REM 42
+SQL> CONNECT alu0101129730@ORCLPDB1;
+Connected.
+SQL> REVOKE ALL PRIVILEGES
+  2  ON DEPARTAMENTO
+  3  FROM ALUMNO;
+
+Revoke succeeded.
+
+SQL> REVOKE ALL PRIVILEGES
+  2  ON AREA
+  3  FROM ALUMNO;
+
+Revoke succeeded.
+
+SQL> REVOKE ALL PRIVILEGES
+  2  ON ASIGNATUA
+  3  
+SQL> REVOKE ALL PRIVILEGES
+  2  ON ASIGNATURA
+  3  FROM ALUMNO;
+
+Revoke succeeded.
+
+SQL> REVOKE ALL PRIVILEGES
+  2  ON TITULACION
+  3  FROM ALUMNO;
+
+Revoke succeeded.
+
+SQL> SPOOL OFF

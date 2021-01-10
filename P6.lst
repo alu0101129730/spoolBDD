@@ -1,0 +1,335 @@
+SQL> REMARK 1. Obtener la fecha del sistema
+SQL> SELECT SYSDATE
+  2  FROM DUAL;
+
+SYSDATE                                                                         
+---------                                                                       
+15-DEC-20                                                                       
+
+SQL> REMARK 2. Obtener hora
+SQL> SELECT TO_CHAR(SYSDATE, 'HH:MI:SS')
+  2  FROM DUAL;
+
+TO_CHAR(                                                                        
+--------                                                                        
+12:13:04                                                                        
+
+SQL> REMARK 3. Fecha con dia de la semana, del mes, mes y anho
+SQL> SELECT TO_CHAR(SYSDATE, 'DAY DD-MM-YYYY')
+  2  FROM DUAL;
+
+TO_CHAR(SYSDATE,'DAYDD-MM-YYYY')                                                
+-----------------------------------------------                                 
+TUESDAY   15-12-2020                                                            
+
+SQL> REMARK 4. Hora formato reloj 24 horas
+SQL> SELECT TO_CHAR (SYSDATE,'HH24')
+  2  FROM DUAL;
+
+TO                                                                              
+--                                                                              
+12                                                                              
+
+SQL> SELECT TO_CHAR(SYSDATE,'HH24')
+  2  FROM DUAL;
+
+TO                                                                              
+--                                                                              
+12                                                                              
+
+SQL> SELECT TO_CHAR(SYSDATE,'HH24:MM24')
+  2  FROM DUAL;
+SELECT TO_CHAR(SYSDATE,'HH24:MM24')
+                       *
+ERROR at line 1:
+ORA-01821: date format not recognized 
+
+
+SQL> SELECT TO_CHAR(SYSDATE,'HH24:MM')
+  2  FROM DUAL;
+
+TO_CH                                                                           
+-----                                                                           
+12:12                                                                           
+
+SQL> REMARK 5. Obtener el numero de dias que lleva impartiendo la asignatura con codigo 11 el profesor con DNI 8888.
+SQL> SELECT SYSDATE - (SELECT FI
+  2  FROM PLAN_DOCENTE
+  3  WHERE DNI=8888 AND CAS=11)
+  4  FROM DUAL;
+
+SYSDATE-(SELECTFIFROMPLAN_DOCENTEWHEREDNI=8888ANDCAS=11)                        
+--------------------------------------------------------                        
+                                              4123.51551                        
+
+SQL> REMARK 6. Listar nombres de profesores que han impartido una asignatura mas de 365 dias.
+SQL> SELECT P FROM PROFESOR WHERE DNI IN
+  2  (SELECT DNI FROM PLAN_DOCENTE WHERE FF-FI >= 365);
+
+P                                                                               
+------------------------------------------------------------                    
+JUAN                                                                            
+MARIA                                                                           
+CARMEN                                                                          
+DAVID                                                                           
+
+SQL> REMARK 7. Hallar numero de profesores del departamento 'ASTROFISICA'.
+SQL> SELECT COUNT(DNI)
+  2  FROM (SELECT DISTINCT DNI
+  3  FROM PROFESOR NATURAL JOIN AREA NATURAL JOIN DEPARTAMENTO
+  4  WHERE D='ASTROFISICA');
+
+COUNT(DNI)                                                                      
+----------                                                                      
+         1                                                                      
+
+SQL> REMARK 8. Hallar para cada departamento el numero de profesores que tiene. Ordena la salida alfabeticamente.
+SQL> SELECT D, COUNT(DNI)
+  2  FROM PROFESOR NATURAL JOIN AREA NATURAL JOIN DEPARTAMENTO
+  3  ORDER BY D;
+SELECT D, COUNT(DNI)
+       *
+ERROR at line 1:
+ORA-00937: not a single-group group function 
+
+
+SQL> SELECT D, COUNT(DNI)
+  2  FROM PROFESOR NATURAL JOIN AREA NATURAL JOIN DEPARTAMENTO
+  3  GROUP BY D
+  4  ORDER BY D;
+
+D                                                            COUNT(DNI)         
+------------------------------------------------------------ ----------         
+ANALISIS MATEMATICO                                                   3         
+ASTROFISICA                                                           1         
+ESTADISTICA, INVESTIGACION OPERATIVA Y COMPUTACION                    7         
+MATEMATICA FUNDAMENTAL                                                1         
+
+SQL> REMARK 9. Hallar en cuantas titulaciones imparte el departamento de 'ESTADISTICA, INVESTIGACION OPERATIVA Y COMPUTACION'.
+SQL> SELECT COUNT(DISTINCT(T) Numero_Titulaciones
+  2  FROM ASIGNATURA WHERE CAS IN (SELECT CAS
+  3  FROM AREA NATURAL JOIN DEPARTAMENTO
+  4  WHERE D='ESTADISTICA, INVESTIGACION OPERATIVA Y COMPUTACION');
+SELECT COUNT(DISTINCT(T) Numero_Titulaciones
+                         *
+ERROR at line 1:
+ORA-00907: missing right parenthesis 
+
+
+SQL> SELECT COUNT(DISTINCT(T)) Numero_Titulaciones
+  2  FROM ASIGNATURA WHERE CAS IN (SELECT CAS
+  3  FROM AREA NATURAL JOIN DEPARTAMENTO
+  4  WHERE D='ESTADISTICA, INVESTIGACION OPERATIVA Y COMPUTACION');
+
+NUMERO_TITULACIONES                                                             
+-------------------                                                             
+                  4                                                             
+
+SQL> REMARK 10. Hallar el numero de profesores adscritos a areas cuyo nombre empiece por 'A'.
+SQL> SELECT COUNT(P)
+  2  FROM AREA NATURAL JOIN PROFESOR
+  3  WHERE AR LIKE 'A%';
+
+  COUNT(P)                                                                      
+----------                                                                      
+         3                                                                      
+
+SQL> REMARK 11. Hallar para cada titulacion el numero de asignaturas que tiene. Ordena la salida alfabeticamente.
+SQL> SELECT COUNT(A)
+  2  FROM ASIGNATURA;
+
+  COUNT(A)                                                                      
+----------                                                                      
+        12                                                                      
+
+SQL> SELECT T, COUNT(CAS)
+  2  FROM ASIGNATURA
+  3  GROUP BY T
+  4  ORDER BY T;
+
+T    COUNT(CAS)                                                                 
+---- ----------                                                                 
+GF            1                                                                 
+GII           7                                                                 
+GM            2                                                                 
+MII           2                                                                 
+
+SQL> REMARK 12. Asignatura con mas creditos teoricos.
+SQL> SELECT A FROM ASIGNATURA
+  2  WHERE CT IN(SELECT MAX(CT) FROM ASIGNATURA);
+
+A                                                                               
+--------------------------------------------------                              
+ENSENANZA DE LA MATEMATICA                                                      
+
+SQL> REMARK 13. Asignatura con menos creditos teoricos.
+SQL> SELECT A FROM ASIGNATURA
+  2  WHERE CT IN(SELECT MIN(CT) FROM ASIGNATURA);
+
+A                                                                               
+--------------------------------------------------                              
+INTELIGENCIA ARTIFICIAL                                                         
+ALMACENES DE DATOS                                                              
+MINERIA DE DATOS                                                                
+
+SQL> REMARK 14. Listar para cada asignatura el numero total de creditos que tiene.
+SQL> SELECT A, CT+CP+CL AS 'Creditos Totales'
+  2  FROM ASIGNATURA;
+SELECT A, CT+CP+CL AS 'Creditos Totales'
+                      *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> SELECT A, CT+CP+CL AS "Creditos Totales"
+  2  FROM ASIGNATURA;
+
+A                                                  Creditos Totales             
+-------------------------------------------------- ----------------             
+BASES DE DATOS                                                    6             
+INTELIGENCIA ARTIFICIAL                                           6             
+ALMACENES DE DATOS                                                3             
+MINERIA DE DATOS                                                  3             
+INFORMATICA BASICA                                                6             
+ALGEBRA                                                           6             
+CALCULO                                                           6             
+OPTIMIZACION                                                      6             
+GESTION DE RIESGOS                                                6             
+ASTRONOMIA                                                        6             
+ENSENANZA DE LA MATEMATICA                                        6             
+
+A                                                  Creditos Totales             
+-------------------------------------------------- ----------------             
+ANALISIS COMPLEJO                                               7.5             
+
+12 rows selected.
+
+SQL> SPOOL OFF
+SQL> REMARK 15 Listar el nombre de la asignatura con mas creditos
+SQL> SELECT A
+  2  FROM ASIGNATURA WHERE CT+CP+CL IN
+  3  (SELECT MAX(CT+CP+CL) FROM ASIGNATURA);
+
+A                                                                               
+--------------------------------------------------                              
+ANALISIS COMPLEJO                                                               
+
+SQL> REMARK 16 Listar el nombre de la asignatura con menos creditos
+SQL> SELECT A
+  2  FROM ASIGNATURA WHERE CT+CP+CL IN
+  3  (SELECT MIN(CT+CP+CL) FROM ASIGNATURA);
+
+A                                                                               
+--------------------------------------------------                              
+ALMACENES DE DATOS                                                              
+MINERIA DE DATOS                                                                
+
+SQL> REMARK 17 Listar el nombre del area a la que esta adscrita la asignatura con mas creditos
+SQL> SELECT AR
+  2  FROM AREA WHERE CAR IN
+  3  (SELECT MAX(CT+CP+CL) FROM ASIGNATURA);
+
+no rows selected
+
+SQL> SELECT AR
+  2  FROM AREA WHERE CAR IN
+  3  (SELECT CAR FROM ASIGNATURA WHERE CT+CP+CL IN
+  4  (SELECT MAX(CT+CP+CL) FROM ASIGNATURA));
+
+AR                                                                              
+------------------------------------------------------------                    
+ANALISIS MATEMATICO                                                             
+
+SQL> REMARK 18 Hallar el numero de asignaturas impartidas por el profesor con DNI 1111
+SQL> SELECT COUNT(CAS)
+  2  FROM PLAN_DOCENTE WHERE DNI=1111 AND FF IS NULL;
+
+COUNT(CAS)                                                                      
+----------                                                                      
+         1                                                                      
+
+SQL> REMARK 19 Hallar el numero de creditos impartidos por el profesor con DNI 1111
+SQL> SELECT SUM(CTA+CPA+CLA) CREDITOS_1111
+  2  FROM PLAN_DOCENTE WHERE DNI=1111;
+
+CREDITOS_1111                                                                   
+-------------                                                                   
+            9                                                                   
+
+SQL> REMARK 20 Hallar el nombre del profesor que mas creditos imparte actualmente
+SQL> SELECT P
+  2  FROM PROFESOR
+  3  WHERE DNI IN (SELECT DNI
+  4  FROM PLAN_DOCENTE WHERE (CTA+CPA+CLA) IN (SELECT MAX(CTA+CPA+CLA)
+  5  FROM PLAN_DOCENTE) AND FF IS NULL;
+FROM PLAN_DOCENTE) AND FF IS NULL
+                                *
+ERROR at line 5:
+ORA-00907: missing right parenthesis 
+
+
+SQL> SELECT P
+  2  FROM PROFESOR
+  3  WHERE DNI IN (SELECT DNI
+  4  FROM PLAN_DOCENTE WHERE (CTA+CPA+CLA) IN (SELECT MAX(CTA+CPA+CLA)
+  5  FROM PLAN_DOCENTE) AND FF IS NULL);
+
+P                                                                               
+------------------------------------------------------------                    
+MARIO                                                                           
+
+SQL> REMARK 21 Hallar el numero medio de asignaturas adscritas a cada area
+SQL> SELECT AVG(COUNT(A)) MEDIA
+  2  FROM ASIGNATURA
+  3  GROUP BY CAR;
+
+     MEDIA                                                                      
+----------                                                                      
+       1.5                                                                      
+
+SQL> REMARK 22 Hallar el numero medio de asignaturas de cada departamento
+SQL> SELECT AVG(COUNT(P)) MEDIA_Profesores
+  2  FROM PROFESOR,AREA
+  3  WHERE PROFESOR.CAR=AREA.CAR
+  4  GROUP BY CD;
+
+MEDIA_PROFESORES                                                                
+----------------                                                                
+               3                                                                
+
+SQL> REMARK 23 Hallar los nombres de las areas con mas de 3 asignaturas
+SQL> SELECT AR FROM AREA
+  2  WHERE CAR IN (SELECT CAR
+  3  FROM ASIGNATURA
+  4  GROUP BY CAR
+  5  HAVING COUNT(CAR)>6);
+
+no rows selected
+
+SQL> REMARK 24 Hallar los nombres de las areas con mas de 6 asignaturas
+SQL> SELECT AR FROM AREA
+  2  WHERE CAR IN (SELECT CAR
+  3  FROM ASIGNATURA
+  4  GROUP BY CAR
+  5  HAVING COUNT(CAR)>3);
+
+AR                                                                              
+------------------------------------------------------------                    
+LENGUAJES Y SISTEMAS INFORMATICOS                                               
+
+SQL> REMARK 25 Hallar el nombre del departamento con menos profesores
+SQL> SELECT D
+  2  FROM DEPARTAMENTO,AREA,PROFESOR
+  3  WHERE PROFESOR.CAR=AREA.CAR AND AREA.CD=DEPARTAMENTO.CD
+  4  GROUP BY D
+  5  HAVING COUNT(DNI)=(SELECT MIN(COUNT(DNI))
+  6  FROM DEPARTAMENTO,AREA,PROFESOR
+  7  WHERE PROFESOR.CAR=AREA.CAR AND AREA.CD=DEPARTAMENTO.CD
+  8  GROUP BY D);
+
+D                                                                               
+------------------------------------------------------------                    
+ASTROFISICA                                                                     
+MATEMATICA FUNDAMENTAL                                                          
+
+SQL> SPOOL OFF

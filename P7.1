@@ -1,0 +1,181 @@
+SQL> SPOOL
+currently spooling to P7.1
+SQL> REMARK 11 Abrir una nueva sesion unix con sqlplus y nuevo spool
+SQL> REMARK 12 Listar todas las t-uplas de PROFESOR y decir que ocurre
+SQL> SELECT * FROM PROFESOR
+  2  ;
+
+       DNI P                                                                    
+---------- ------------------------------------------------------------         
+       CAR CAT                                                                  
+---------- -----                                                                
+      1111 JUAN                                                                 
+         6 CU                                                                   
+                                                                                
+      2222 CARLOS                                                               
+         7 TU                                                                   
+                                                                                
+      3333 PEDRO                                                                
+         4 TEU                                                                  
+                                                                                
+
+       DNI P                                                                    
+---------- ------------------------------------------------------------         
+       CAR CAT                                                                  
+---------- -----                                                                
+      4444 MARIA                                                                
+         7 TU                                                                   
+                                                                                
+      5555 IVAN                                                                 
+         1 CEU                                                                  
+                                                                                
+      6666 CARMEN                                                               
+         3 CD                                                                   
+                                                                                
+
+       DNI P                                                                    
+---------- ------------------------------------------------------------         
+       CAR CAT                                                                  
+---------- -----                                                                
+      7777 MARIO                                                                
+         2 TU                                                                   
+                                                                                
+      8888 FRANCISCO                                                            
+         5 TU                                                                   
+                                                                                
+      9999 ANGELA                                                               
+         8 TEU                                                                  
+                                                                                
+
+       DNI P                                                                    
+---------- ------------------------------------------------------------         
+       CAR CAT                                                                  
+---------- -----                                                                
+      1010 DAVID                                                                
+         4 TU                                                                   
+                                                                                
+      2020 SOLEDAD                                                              
+         7 CU                                                                   
+                                                                                
+      3030 JOSE MANUEL                                                          
+         6 TEU                                                                  
+                                                                                
+
+       DNI P                                                                    
+---------- ------------------------------------------------------------         
+       CAR CAT                                                                  
+---------- -----                                                                
+      4040 CARMELO                                                              
+         7 TU                                                                   
+                                                                                
+
+13 rows selected.
+
+SQL> REMARK No sale Carina porque no se ha hecho commit
+SQL> REMARK 13 Anhadir la t-upla (5050,'CARINA',8,'CEU') A PROFESOR y decir que ocurre
+SQL> INSERT INTO PROFESOR
+  2  VALUES (5050,'CARINA',8,'CEU');
+INSERT INTO PROFESOR
+*
+ERROR at line 1:
+ORA-00001: unique constraint (ALU0101129730.SYS_C00210108) violated 
+
+
+SQL> REMARK 15
+SQL> SELECT * FROM PROFESOR;
+
+       DNI P                                                                    
+---------- ------------------------------------------------------------         
+       CAR CAT                                                                  
+---------- -----                                                                
+      1111 JUAN                                                                 
+         6 CU                                                                   
+                                                                                
+      2222 CARLOS                                                               
+         7 TU                                                                   
+                                                                                
+      3333 PEDRO                                                                
+         4 TEU                                                                  
+                                                                                
+
+       DNI P                                                                    
+---------- ------------------------------------------------------------         
+       CAR CAT                                                                  
+---------- -----                                                                
+      4444 MARIA                                                                
+         7 TU                                                                   
+                                                                                
+      5555 IVAN                                                                 
+         1 CEU                                                                  
+                                                                                
+      6666 CARMEN                                                               
+         3 CD                                                                   
+                                                                                
+
+       DNI P                                                                    
+---------- ------------------------------------------------------------         
+       CAR CAT                                                                  
+---------- -----                                                                
+      7777 MARIO                                                                
+         2 TU                                                                   
+                                                                                
+      8888 FRANCISCO                                                            
+         5 TU                                                                   
+                                                                                
+      9999 ANGELA                                                               
+         8 TEU                                                                  
+                                                                                
+
+       DNI P                                                                    
+---------- ------------------------------------------------------------         
+       CAR CAT                                                                  
+---------- -----                                                                
+      1010 DAVID                                                                
+         4 TU                                                                   
+                                                                                
+      2020 SOLEDAD                                                              
+         7 CU                                                                   
+                                                                                
+      3030 JOSE MANUEL                                                          
+         6 TEU                                                                  
+                                                                                
+
+       DNI P                                                                    
+---------- ------------------------------------------------------------         
+       CAR CAT                                                                  
+---------- -----                                                                
+      4040 CARMELO                                                              
+         7 TU                                                                   
+                                                                                
+      5050 CARINA                                                               
+         8 CEU                                                                  
+                                                                                
+
+14 rows selected.
+
+SQL> SET LINESIZE 180
+SQL> SELECT * FROM PROFESOR;
+
+       DNI P                                                                   CAR CAT                                                                                              
+---------- ------------------------------------------------------------ ---------- -----                                                                                            
+      1111 JUAN                                                                  6 CU                                                                                               
+      2222 CARLOS                                                                7 TU                                                                                               
+      3333 PEDRO                                                                 4 TEU                                                                                              
+      4444 MARIA                                                                 7 TU                                                                                               
+      5555 IVAN                                                                  1 CEU                                                                                              
+      6666 CARMEN                                                                3 CD                                                                                               
+      7777 MARIO                                                                 2 TU                                                                                               
+      8888 FRANCISCO                                                             5 TU                                                                                               
+      9999 ANGELA                                                                8 TEU                                                                                              
+      1010 DAVID                                                                 4 TU                                                                                               
+      2020 SOLEDAD                                                               7 CU                                                                                               
+
+       DNI P                                                                   CAR CAT                                                                                              
+---------- ------------------------------------------------------------ ---------- -----                                                                                            
+      3030 JOSE MANUEL                                                           6 TEU                                                                                              
+      4040 CARMELO                                                               7 TU                                                                                               
+      5050 CARINA                                                                8 CEU                                                                                              
+
+14 rows selected.
+
+SQL> SPOOL OFF
